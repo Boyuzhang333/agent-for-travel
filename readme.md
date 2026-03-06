@@ -1,23 +1,60 @@
-User
- ↓
-planner_agent
- ↓
-budget_agent
- ↓
-ParallelAgent
- ├ flight_agent
- ├ hotel_agent
- └ attraction_agent
- ↓
-itinerary_agent
+```mermaid
+flowchart TD
+    A[User] --> B[planner_agent]
+    B --> C[budget_agent]
+    C --> D[ParallelAgent]
+
+    D --> E[flight_agent]
+    D --> F[hotel_agent]
+    D --> G[attraction_agent]
+
+    E --> H[itinerary_agent]
+    F --> H
+    G --> H
+```
 
 
-用户输入 出发地，目的地，玩的天数，预算
+L’utilisateur saisit : **lieu de départ, destination, nombre de jours de voyage et budget**.
 
-先把预算按逻辑分给 玩 吃 住 行 （涉及天数，目的地，预算）
+1. **Répartition du budget**
+   Le système commence par répartir le budget total selon plusieurs catégories logiques :
 
-然后各个部分拿着给定的预算，去挑应该选的东西：这个部分涉及tools，要求用 mock数据 提供酒店信息，航班信息，餐厅信息，娱乐信息，然后对应的agent，拿着给定的预算去挑选
+   * **Transport**
+   * **Hébergement**
+   * **Restauration**
+   * **Activités / loisirs**
 
-然后每个这一部分的agent 返回好属于他们那一部分的返回体
+   Cette répartition dépend de plusieurs facteurs :
 
-最后用agent整合出一套回答
+   * le nombre de jours du voyage
+   * la destination
+   * le budget total
+
+2. **Sélection des options par catégorie**
+   Pour chaque catégorie, un **agent spécialisé** reçoit la part de budget correspondante et doit choisir les options les plus adaptées.
+
+   Chaque agent utilise des **tools avec des données simulées (mock data)**, par exemple :
+
+   * informations sur les **hôtels**
+   * informations sur les **vols**
+   * informations sur les **restaurants**
+   * informations sur les **activités de loisirs**
+
+   À partir de ces données, chaque agent sélectionne les options qui respectent le budget attribué.
+
+3. **Retour des résultats par agent**
+   Chaque agent renvoie un **objet de réponse** contenant les éléments sélectionnés pour sa catégorie (transport, hébergement, restauration ou activités).
+
+4. **Synthèse finale**
+   Un **agent final** récupère les réponses de tous les agents et les **combine pour générer une proposition complète d’itinéraire de voyage**, incluant transport, logement, repas et activités, tout en respectant le budget global.
+
+![alt text](image-1.png)
+
+
+加上部署方面
+
+callback 方面
+
+考虑生产和开发的平衡
+
+
