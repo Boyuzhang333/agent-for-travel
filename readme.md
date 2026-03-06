@@ -1,6 +1,17 @@
 ![alt text](image-7.png)
 
+## Conformité aux contraintes du projet
 
+| # | Contrainte | Implémentation dans le projet |
+|---|---|---|
+| 1 | **Minimum 3 agents** | Le système utilise plusieurs **LlmAgent** avec des rôles distincts : `planner_agent` (extraction des informations de voyage), `budget_agent` (répartition du budget), `transport_agent` (sélection des vols), `hotel_agent`, `food_agent`, `activity_agent`, `final_itinerary_agent`, et `presentation_agent`. |
+| 2 | **Au moins 3 tools custom** | Plusieurs **tools Python personnalisés** sont implémentés avec types annotés et docstrings : `allocate_budget`, `search_flights`, `search_hotels`, `search_restaurants`, `search_activities`. |
+| 3 | **Au moins 2 Workflow Agents différents** | Le projet utilise deux types de workflow agents : **SequentialAgent** pour l’orchestration principale du système et **ParallelAgent** pour exécuter simultanément les agents de recherche (transport, hôtel, restaurants, activités). |
+| 4 | **State partagé** | Les agents communiquent via des **variables partagées avec `output_key`**. Les résultats sont ensuite utilisés dans les instructions des agents suivants via des templates comme `{travel_info}`, `{budget_plan}`, `{flight_option}`, `{hotel_option}`, `{food_plan}` et `{activities}`. |
+| 5 | **Les 2 mécanismes de délégation** | Le projet utilise deux formes de délégation : **AgentTool** pour invoquer des tools spécialisés et **transfer_to_agent** pour déléguer complètement certaines tâches entre agents dans le workflow. |
+| 6 | **Au moins 2 callbacks** | Deux types de callbacks sont implémentés : `before_agent_callback` (appelé avant l’exécution d’un agent) et `after_tool_callback` (appelé après l’exécution d’un tool). |
+| 7 | **Runner programmatique** | Le projet inclut un script `main.py` qui instancie **Runner** et **InMemorySessionService** afin de gérer l’exécution du système multi-agents et les sessions utilisateur. |
+| 8 | **Démo fonctionnelle** | Le système peut être exécuté via le script `main.py` ou via le script de test `test_travel_agent.sh`. La démonstration permet d’observer les agents, les appels aux tools et la génération finale d’un itinéraire de voyage. |
 ### Description du projet et de l’architecture
 
 Ce projet consiste à développer un **système multi-agents de planification de voyage** capable de générer automatiquement une proposition complète d’itinéraire à partir de quelques informations fournies par l’utilisateur.
