@@ -12,7 +12,20 @@ MODEL = os.getenv("ADK_MODEL_NAME", "ollama/qwen2.5:7b")
 # -------------------------
 # 1 Planner Agent
 # -------------------------
+def before_agent_callback(callback_context):
+    print("\n=== BEFORE AGENT CALLBACK ===")
+    print("Agent is starting")
+def after_tool_callback(**kwargs):
+    print("\n=== AFTER TOOL CALLBACK ===")
 
+    tool = kwargs.get("tool")
+    tool_response = kwargs.get("tool_response")
+
+    if tool:
+        print("Tool:", tool.name)
+
+    print("Result:", tool_response)
+    
 planner_agent = LlmAgent(
     name="planner_agent",
     model=MODEL,
@@ -62,6 +75,10 @@ Rules:
 - Do NOT call allocate_budget again
 - Do NOT modify the JSON
 - Do NOT add explanations
+- Call the tool only once.
+- Call the tool only once.
+- Call the tool only once.
+
 """,
     output_key="budget_plan"
 )
@@ -114,6 +131,8 @@ hotel_agent = LlmAgent(
     name="hotel_agent",
     model=MODEL,
     tools=[search_hotels],
+    before_agent_callback=before_agent_callback,
+    after_tool_callback=after_tool_callback,
     instruction="""
 Return ONLY valid JSON (no markdown, no prose).
 
